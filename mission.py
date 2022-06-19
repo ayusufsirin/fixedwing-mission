@@ -3,6 +3,9 @@ from ctypes import util
 from dronekit import connect
 from utils import *
 
+import threading
+
+
 # connection_string = '/dev/serial/by-id/usb-ArduPilot_fmuv2_27003F000651373236393336-if00'
 connection_string = "127.0.0.1:14550"
 baud_rate = 115200
@@ -15,6 +18,8 @@ WAYPOINTS = [
     (-35.3635325, 149.1651095),  # wp5
 ]
 
+target_detected = False
+counter = 0
 
 def go_waypoint(vehicle, index, alt):
     location = WAYPOINTS[index]
@@ -53,12 +58,22 @@ def main():
 
     arm_and_takeoff(iha=vehicle, yukseklik=10)
 
-    go_waypoint(vehicle=vehicle, index=1, alt=5)
-    go_waypoint(vehicle=vehicle, index=2, alt=5)
-    go_waypoint(vehicle=vehicle, index=3, alt=5)
-    go_waypoint(vehicle=vehicle, index=4, alt=5)
+    while not target_detected:
+        go_waypoint(vehicle=vehicle, index=0, alt=5)
+        go_waypoint(vehicle=vehicle, index=1, alt=5)
+        go_waypoint(vehicle=vehicle, index=2, alt=5)
+        go_waypoint(vehicle=vehicle, index=3, alt=5)
+        go_waypoint(vehicle=vehicle, index=4, alt=5)
+        global counter
+        counter = counter + 1
 
 
+def cam_feed():
+    while counter != 1:
+        continue
 
-if __name__ == "__main__":
-    main()
+        
+    WAYPOINTS[1] = (-35.36323349, 149.16682031)
+    global target_detected
+    target_detected = True
+    print('NEW WP SET')
