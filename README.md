@@ -1,4 +1,5 @@
 # Fixed Wing UAV Mission Flight Simulation Environment
+2022 yılı Teknofest Yarışması Sabit Kanat İHA kategorisi görev yazılımı reposudur.
 ## Setup
 
 Create the new catkin package
@@ -21,6 +22,3 @@ Set the main script <roscamera.py> as executable
 cd ~/catkin_ws/src/roscamera/scripts
 chmod +x roscamera.py
 ```
-
-
-
