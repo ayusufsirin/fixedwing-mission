@@ -3,20 +3,14 @@
 
 from multiprocessing import Manager, Queue
 from multiprocessing.process import Process
-from tkinter.messagebox import NO
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
-import rospy
-import roslib
-from sensor_msgs.msg import Image
 
 from dronekit import connect, Command, VehicleMode
 from pymavlink import mavutil
 import time
 
 import utils
-
-roslib.load_manifest('roscamera')
 
 vehicle = None
 
@@ -179,15 +173,17 @@ def main():
 
     print('##### MISSION INITIALIZED #####')
 
-    print("Initializing ROS Camera ...")
+    print("Initializing RPi Camera ...")
     
-    ic = image_converter()
-    rospy.init_node('image_converter', anonymous=True)
-    try:
-        rospy.spin()
-    except KeyboardInterrupt:
-        print("Shutting down")
-        cv2.destroyAllWindows()
+    # ic = image_converter()
+    # rospy.init_node('image_converter', anonymous=True)
+    # try:
+    #     rospy.spin()
+    # except KeyboardInterrupt:
+    #     print("Shutting down")
+    #     cv2.destroyAllWindows()
+
+
     
     print('### GOING TO TARGET ###')
     vehicle.mode = VehicleMode("GUIDED")
