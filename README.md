@@ -40,7 +40,7 @@ rosrun gazebo_ros gazebo --verbose <.word file location>
 
 Export API with Python socket:
 ```bash
-cd ardupilot/ArduCopter
+cd ~FixedWing/ardupilot/ArduCopter
 ../Tools/autotest/sim_vehicle.py -f gazebo-iris --console --map
 ```
 
