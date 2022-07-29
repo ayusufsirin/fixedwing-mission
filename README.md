@@ -36,6 +36,7 @@ Run gazebo with ROS:
 ```bash 
 rosrun gazebo_ros --verbose <.word file location>
 ```
+<.word file location> = ~/Downloads/pist2.world for my case
 
 Export API with Python socket:
 ```bash
