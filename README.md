@@ -22,3 +22,39 @@ Set the main script <roscamera.py> as executable
 cd ~/catkin_ws/src/roscamera/scripts
 chmod +x roscamera.py
 ```
+
+## Running
+
+All lines in different terminals
+
+Run ROS core:
+```bash
+roscore
+```
+
+Run gazebo with ROS:
+```bash 
+rosrun gazebo_ros --verbose <.word file location>
+```
+
+Export API with Python socket:
+```bash
+cd ardupilot/ArduCopter
+../Tools/autotest/sim_vehicle.py -f gazebo-iris --console --map
+```
+
+Run our code with ROS:
+```bash
+rosrun roscamera roscamera.py
+```
+
+## Editting
+For my case Python script are in:
+
+/home/dad/
+  - FixedWing/ardupilot
+  - catkin_ws/src/roscamera/scripts  # Path for roscamera.py and utils.py
+
+You can modify the roscore.py script for differing behaviour.
+
+  
