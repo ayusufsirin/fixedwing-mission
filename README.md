@@ -34,7 +34,7 @@ roscore
 
 Run gazebo with ROS:
 ```bash 
-rosrun gazebo_ros --verbose <.word file location>
+rosrun gazebo_ros gazebo --verbose <.word file location>
 ```
 <.word file location> = ~/Downloads/pist2.world for my case
 
