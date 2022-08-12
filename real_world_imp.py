@@ -198,7 +198,7 @@ while True:
    
 
     yaw_radians = vehicle.attitude.yaw
-    pitch_radians = vehicle.attitude.roll
+    pitch_radians = vehicle.attitude.pitch
     roll_radians = vehicle.attitude.roll
 
  
