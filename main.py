@@ -1,6 +1,6 @@
 import os
 import time
-from datetime import datetime
+import datetime
 import logging
 import argparse
 from dronekit import connect, VehicleMode
@@ -9,7 +9,7 @@ from multiprocessing import Process
 import mission
 
 LOG_DIR = '/tmp/fixedwing-mission/'
-LOG_FILE = f'{datetime.strftime(datetime.now(), format="YYYY-MM-DD_HH:MM:SS")}_mission.log'
+LOG_FILE = f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}_mission.log'
 
 parser = argparse.ArgumentParser(description='commands')
 parser.add_argument('--port')
@@ -67,13 +67,13 @@ def main():
             )
 
             print('Change mode to AUTO |', end='\r')
-            time.sleep(0.5)
+            time.sleep(0.2)
             print('Change mode to AUTO /', end='\r')
-            time.sleep(0.5)
+            time.sleep(0.2)
             print('Change mode to AUTO -', end='\r')
-            time.sleep(0.5)
+            time.sleep(0.2)
             print('Change mode to AUTO \\', end='\r')
-            time.sleep(0.5)
+            time.sleep(0.2)
         elif not p_mission.is_alive():
             print('Mission started.')
             p_mission.start()
@@ -94,8 +94,7 @@ if __name__ == '__main__':
         level=logging.DEBUG
     )
 
-    while True:
-        try:
-            main()
-        except Exception as e:
-            logging.exception(e)
+    try:
+        main()
+    except Exception as e:
+        logging.exception(e)

@@ -41,16 +41,11 @@ def main(connection_string):
         ret, frame = vid.read()
         frame, vehicle_params = utils.detect(frame=frame, vehicle=vehicle)
 
-        # cv2.imshow('frame', frame)
-
         if vehicle_params is not None:
             pos_map.append(vehicle_params)
 
         if len(pos_map) > DET_THRESH_FRAME_NUM:
             target_gps_pos = utils.target_finder(pos_map)
-            break
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
     vid.release()
