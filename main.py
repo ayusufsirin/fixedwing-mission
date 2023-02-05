@@ -1,6 +1,6 @@
 import os
 import time
-import datetime
+from datetime import datetime
 import logging
 import argparse
 from dronekit import connect, VehicleMode
@@ -8,8 +8,8 @@ from multiprocessing import Process
 
 import mission
 
-
-LOG_FILE = f'/tmp/fixedwing-mission/{datetime.datetime.now().strftime("YYYY-MM-DD_HH:MM:SS")}_mission.log'
+LOG_DIR = '/tmp/fixedwing-mission/'
+LOG_FILE = f'{datetime.strftime(datetime.now(), format="YYYY-MM-DD_HH:MM:SS")}_mission.log'
 
 parser = argparse.ArgumentParser(description='commands')
 parser.add_argument('--port')
@@ -80,9 +80,17 @@ def main():
 
 
 if __name__ == '__main__':
+    if not os.path.exists(LOG_DIR):
+        os.makedirs(LOG_DIR)
+
+    logging.FileHandler(
+        filename=LOG_DIR + LOG_FILE,
+        mode='w',
+        encoding=None,
+        delay=False
+    )
+    
     logging.basicConfig(
-        filename=LOG_FILE,
-        filemode='w',
         level=logging.DEBUG
     )
 
