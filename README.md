@@ -1,61 +1,105 @@
-# Fixed Wing UAV Mission Flight Simulation Environment
-2022 yılı Teknofest Yarışması Sabit Kanat İHA kategorisi görev yazılımı reposudur.
-## Setup
+# RPi Mission
 
-Create the new catkin package
+This branch is for deployment purposes on the Mission Controller board like RPi.
+
+## Fixed-Wing Project RPi Config
+
+Install Ubuntu Server or Raspbian Lite for RPi, firstly.
+
+>**📝 Note:**
+For Raspbian you can follow the instructions:
+https://medium.com/@jrcharney/connect-your-raspberry-pi-to-your-computer-via-ethernet-4564e1e68922
+
+## Connection
+
+Connect your RPi to network and find its IP and username. Then:
+
 ```bash
-cd ~/catkin_ws/src
-catkin_create_pkg roscamera
-mkdir roscamera/scripts
+ssh username@remote_host
 ```
 
-Run in the project directory
+For example in my case: username@remote_host = ubuntu@192.168.43.114 or pi@raspberrypi.local
+
+## Environmental Setup for Ubuntu Server
+Environmental setup for Ubuntu Server on RPi. 
+
+Development packs for Ubuntu Server:
 ```bash
-cp CMakeLists.txt ~/catkin_ws/src/roscamera/scripts
-cp mission.py ~/catkin_ws/src/roscamera/scripts
-cp roscamera.py ~/catkin_ws/src/roscamera/scripts
-cp utils.py ~/catkin_ws/src/roscamera/scripts
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget 
+sudo apt install libgl1 libxml2 libxslt1.1 libxslt1-dev
 ```
 
-Set the main script <roscamera.py> as executable
+for Python:
 ```bash
-cd ~/catkin_ws/src/roscamera/scripts
-chmod +x roscamera.py
+sudo apt install python2 python2-dev
+sudo apt install python-pip
 ```
 
-## Running
+python2 packages:
+```pip2
+opencv-python<=4.2.0.32
+```
 
-All lines in different terminals
+python3 packages:
+```pip
+opencv-python
+dronekit
+```
 
-Run ROS core:
 ```bash
-roscore
+sudo -H pip2 install wheel
+sudo -H pip2 install dronekit==2.9.1
+sudo -H pip2 install dronekit-sitl==3.2.0
+sudo -H pip2 install opencv-python-headless==4.2.0.32
 ```
 
-Run gazebo with ROS:
-```bash 
-rosrun gazebo_ros gazebo --verbose <.word file location>
-```
-<.word file location> = ~/Downloads/pist2.world for my case
+## Environmental Setup for Rasbpian Lite
 
-Export API with Python socket:
+Development packs:
 ```bash
-cd ~FixedWing/ardupilot/ArduCopter
-../Tools/autotest/sim_vehicle.py -f gazebo-iris --console --map
+sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget 
+sudo apt install libgl1 libxml2 libxslt1.1 libxslt1-dev
+sudo apt install python3 python3-dev python3-pip
 ```
 
-Run our code with ROS:
+Pip modules:
 ```bash
-rosrun roscamera roscamera.py
+sudo -H pip install opencv-python-headless imutils dronekit pyserial
 ```
 
-## Editting
-For my case Python script are in:
+MavProxy installation
+```bash
+sudo apt install python3-wxgtk4.0 python3-matplotlib python3-lxml python3-pygame
+sudo -H pip install PyYAML mavproxy
+```
 
-/home/dad/
-  - FixedWing/ardupilot
-  - catkin_ws/src/roscamera/scripts  # Path for roscamera.py and utils.py
 
-You can modify the roscore.py script for differing behaviour.
+>**📝 Note:**
+For OpenCV installlation on GUI'ness systems remove the "-headless" flag at the end to get <imshow()> like GUI functions.
+This flag is for servers with no GUI.
 
-  
+>**📝 Note:**
+"sudo -H" is for adding scripts to "PATH".
+
+## Sync Mission Files at RPi
+
+SSH key-based authentication:
+```bash
+ssh-keygen
+ssh-copy-id username@remote_host
+```
+
+Sync:
+```bash
+rsync -a rpi_mission username@remote_host:/home/<user>/mission/
+```
+
+\<user\> is the username of the remote
+
+## References
+
+*   SSH Key Based Auth, https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server
+ 
+*   RSync to remote file manuplations, https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories
+
+* OpenCV readme, https://github.com/opencv/opencv-python
