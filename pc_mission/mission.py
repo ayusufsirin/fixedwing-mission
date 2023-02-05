@@ -1,6 +1,6 @@
 import time
 import cv2
-from dronekit import Command
+from dronekit import Command, VehicleMode, connect
 from pymavlink import mavutil
 
 import utils
@@ -14,9 +14,9 @@ vehicle = None
 wps = []  # waypoints
 
 
-def main():
+def main(connection_string):
     print('##### CONNECTING VEHICLE #####')
-    vehicle = utils.connect_uav()
+    vehicle = connect(connection_string)
     vehicle.wait_ready('autopilot_version')
     print('Autopilot version: %s' % vehicle.version)
     print(vehicle.mode.__str__())
@@ -31,8 +31,6 @@ def main():
     for cmd in cmds:
         wps.append(cmd)
 
-    print(wps[WP_IDX_TARGET_1])
-
     print('##### TARGET DETECTION STARTED #####')
     pos_map = []
     target_gps_pos = None
@@ -42,8 +40,8 @@ def main():
     while True:
         ret, frame = vid.read()
         frame, vehicle_params = utils.detect(frame=frame, vehicle=vehicle)
-        
-        cv2.imshow('frame', frame)
+
+        # cv2.imshow('frame', frame)
 
         if vehicle_params is not None:
             pos_map.append(vehicle_params)
@@ -51,7 +49,7 @@ def main():
         if len(pos_map) > DET_THRESH_FRAME_NUM:
             target_gps_pos = utils.target_finder(pos_map)
             break
-        
+
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
@@ -82,12 +80,12 @@ def main():
         cmds.add(wp)
 
     cmds.upload()
-    cmds.wait_ready()
     print('##### NEW WAYPOINTS ARE UPLOADED #####')
-
-    vehicle.close()
-    print('##### CLOSING VEHICLE OBJECT #####')
+    
+    while True:
+        time.sleep(3)
+        print('At WP: ', vehicle.commands.next)
 
 
 if __name__ == '__main__':
-    main()
+    main('COM23')

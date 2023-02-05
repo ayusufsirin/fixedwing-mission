@@ -13,3 +13,10 @@ pip install dronekit
 pip install dronekit-sitl
 pip install pyserial
 ```
+
+MavProxy installation
+```bash
+pip install mavproxy
+pip install wxPython
+pip install matplotlib
+```

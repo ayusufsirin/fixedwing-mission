@@ -25,84 +25,6 @@ def connect_uav():
     return vehicle
 
 
-def set_velocity(velocity_x, velocity_y, iha):
-    msg = iha.message_factory.set_position_target_local_ned_encode(
-        0,       # time_boot_ms (not used)
-        0, 0,    # target system, target component
-        mavutil.mavlink.MAV_FRAME_BODY_NED,  # frame
-        0b0000111111000111,  # type_mask (only speeds enabled)
-        0, 0, 0,  # x, y, z positions (not used)
-        velocity_x, velocity_y, 0,  # x, y, z velocity in m/s
-        # x, y, z acceleration (not supported yet, ignored in GCS_Mavlink)
-        0, 0, 0,
-        0, 0)    # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
-
-    iha.send_mavlink(msg)
-
-
-def goto_position_target_global_int(aLocation, iha):
-    msg = iha.message_factory.set_position_target_global_int_encode(
-        0,       # time_boot_ms (not used)
-        0, 0,    # target system, target component
-        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT_INT,  # frame
-        0b0000111111111000,  # type_mask (only speeds enabled)
-        # lat_int - X Position in WGS84 frame in 1e7 * meters
-        int(aLocation.lat*1e7),
-        # lon_int - Y Position in WGS84 frame in 1e7 * meters
-        int(aLocation.lon*1e7),
-        # alt - Altitude in meters in AMSL altitude, not WGS84 if absolute or relative, above terrain if GLOBAL_TERRAIN_ALT_INT
-        int(aLocation.alt),
-        0,  # X velocity in NED frame in m/s
-        0,  # Y velocity in NED frame in m/s
-        0,  # Z velocity in NED frame in m/s
-        # afx, afy, afz acceleration (not supported yet, ignored in GCS_Mavlink)
-        0, 0, 0,
-        0, 0)    # yaw, yaw_rate (not supported yet, ignored in GCS_Mavlink)
-    # send command to vehicle
-    iha.send_mavlink(msg)
-
-
-def arm_and_takeoff(yukseklik, iha):
-    if iha.armed == True:
-        return
-
-    while iha.is_armable == False:
-        print("Arm durumu sorgulaniyor...")
-        time.sleep(1)
-    iha.mode = "GUIDED"
-    while iha.mode != "GUIDED":
-        print("GUIDED moda gecis yapiliyor")
-        time.sleep(1)
-    print("GUIDED moda gecis yapildi")
-    iha.armed = True
-    while iha.armed == False:
-        print("IHA arm oluyor")
-        time.sleep(1)
-    print("IHA arm oldu.\n")
-    iha.simple_takeoff(yukseklik)
-    while iha.location.global_relative_frame.alt < yukseklik*0.96:
-        print("TAKEOFF : Su anki yukseklik =",
-              iha.location.global_relative_frame.alt)
-        time.sleep(1)
-    print("TAKEOFF : SON yukseklik =", iha.location.global_relative_frame.alt)
-    print("TAKEOFF : Islem basariyla gerceklesti\n")
-
-
-def get_current_location(iha):
-    return (
-        iha.location.global_relative_frame.lat,
-        iha.location.global_relative_frame.lon
-    )
-
-
-def get_current_location_global(iha):
-    return LocationGlobalRelative(
-        iha.location.global_relative_frame.lat,
-        iha.location.global_relative_frame.lon,
-        iha.location._alt
-    )
-
-
 def detect(frame, vehicle):
     global center
 
@@ -145,9 +67,6 @@ def detect(frame, vehicle):
                 cv2.circle(frame, center, 5, (0, 0, 255), -1),
                 cv2.circle(frame, (int(x), int(y)), 5, (0, 255, 0), -1)
 
-            # print('camCenter: {0}'.format(center))
-            # queue.put(center)
-
             if index % 10 == 0:
                 vehicle_params = {
                     "y_angle": vehicle.attitude.pitch,
@@ -188,13 +107,6 @@ def compute_target_pos(vehicle_params):
 
     target_lat = plane_lat + offset_x / 10**9
     target_lon = plane_lon + offset_y / 10**9
-    # print("Plane  GPS X: {:3.8f}".format(planeGPSX), "Y: {:3.8f}".format(planeGPSY), "Alt: {:3.8f}".format(planeAltitude))
-    # print(
-    #     "Offset     X: {:3.8f}".format(math.atan(math.tan(aovX) * (2 * targetCamX / camWidth))),
-    #     "Y: {:3.8f}".format(math.atan(math.tan(aovY) * (2 * targetCamY / camHeight)))
-    #     )
-    # print("Target Cam X: {:3.8f}".format(targetCamX), "Y: {:3.8f}".format(targetCamY))
-    # print("Target GPS X: {:3.8f}".format(targetGPSX), "Y: {:3.8f}".format(targetGPSY))
 
     print(
         'targetCam: ', (targetCamX, targetCamY),
