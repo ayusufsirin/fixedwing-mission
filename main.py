@@ -1,10 +1,15 @@
 import os
 import time
+import datetime
+import logging
 import argparse
 from dronekit import connect, VehicleMode
 from multiprocessing import Process
 
 import mission
+
+
+LOG_FILE = f'/tmp/fixedwing-mission/{datetime.datetime.now().strftime("YYYY-MM-DD_HH:MM:SS")}_mission.log'
 
 parser = argparse.ArgumentParser(description='commands')
 parser.add_argument('--port')
@@ -22,12 +27,12 @@ def setup_proxy():
         f'mavproxy.py --master={serial_port} --out {connection_string_1} --out {connection_string_2} --daemon')
 
 
-if __name__ == '__main__':
+def main():
     p_proxy = Process(target=setup_proxy)
     p_mission = Process(target=mission.main, args=(connection_string_2,))
 
     p_proxy.start()
-    
+
     vehicle = connect(connection_string_1)
 
     # Backup original waypoints
@@ -56,7 +61,10 @@ if __name__ == '__main__':
 
                 cmds.upload()
 
-            p_mission = Process(target=mission.main, args=(connection_string_2,))
+            p_mission = Process(
+                target=mission.main,
+                args=(connection_string_2,)
+            )
 
             print('Change mode to AUTO |', end='\r')
             time.sleep(0.5)
@@ -69,3 +77,17 @@ if __name__ == '__main__':
         elif not p_mission.is_alive():
             print('Mission started.')
             p_mission.start()
+
+
+if __name__ == '__main__':
+    logging.basicConfig(
+        filename=LOG_FILE,
+        filemode='w',
+        level=logging.DEBUG
+    )
+
+    while True:
+        try:
+            main()
+        except Exception as e:
+            logging.exception(e)
