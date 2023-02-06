@@ -1,61 +1,21 @@
-# Fixed Wing UAV Mission Flight Simulation Environment
-2022 yılı Teknofest Yarışması Sabit Kanat İHA kategorisi görev yazılımı reposudur.
-## Setup
+# Sabit Kanat İHA Görev Yazılımı Reposu
 
-Create the new catkin package
-```bash
-cd ~/catkin_ws/src
-catkin_create_pkg roscamera
-mkdir roscamera/scripts
-```
+2022 yılı Teknofest Yarışması Sabit Kanat İHA kategorisi görev yazılımı reposudur. Görevde amaç kırmızı olarak verilmiş bir hedefi otonom bir şekilde tespit edip tespit edilen bu hedefe top bırakmktır.
 
-Run in the project directory
-```bash
-cp CMakeLists.txt ~/catkin_ws/src/roscamera/scripts
-cp mission.py ~/catkin_ws/src/roscamera/scripts
-cp roscamera.py ~/catkin_ws/src/roscamera/scripts
-cp utils.py ~/catkin_ws/src/roscamera/scripts
-```
+Bu repo 3 farklı ortam için görev yazılımını barındırmaktadır:
 
-Set the main script <roscamera.py> as executable
-```bash
-cd ~/catkin_ws/src/roscamera/scripts
-chmod +x roscamera.py
-```
+* PC ortamı (Linux/MAC/Windows)
+* Raspberry Pi ortamı
+* Gazebo simülasyon ortamı
 
-## Running
+Diğerlerinden farklı olarak Gazebo ortamında simülasyonlar döner kanat bir İHA için yapılmıştır.
 
-All lines in different terminals
 
-Run ROS core:
-```bash
-roscore
-```
+## Geliştirme
 
-Run gazebo with ROS:
-```bash 
-rosrun gazebo_ros gazebo --verbose <.word file location>
-```
-<.word file location> = ~/Downloads/pist2.world for my case
+Geliştirmeye katkıda bulunmak isteyen takım arkadaşlarına her zaman kapımız açıktır. Repoda bir takım karışıklıklarla karşılaşabilirsiniz. Bu durumda kendi branch'ınızda geliştirmenizi yapabilir ve pull request oluşturarak reponun düzenlli kalmasını sağlayabilirsiniz. 
 
-Export API with Python socket:
-```bash
-cd ~FixedWing/ardupilot/ArduCopter
-../Tools/autotest/sim_vehicle.py -f gazebo-iris --console --map
-```
 
-Run our code with ROS:
-```bash
-rosrun roscamera roscamera.py
-```
+## Lisans
 
-## Editting
-For my case Python script are in:
-
-/home/dad/
-  - FixedWing/ardupilot
-  - catkin_ws/src/roscamera/scripts  # Path for roscamera.py and utils.py
-
-You can modify the roscore.py script for differing behaviour.
-
-  
+Bu yazılımı istediğiniz gibi kullanabilir, dağıtabilir ve paylaşabilirsiniz. 
