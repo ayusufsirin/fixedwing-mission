@@ -31,6 +31,6 @@ sudo crontab -e
 Add:
 
 ```bash
-@reboot sh /home/pi/fixedwing-mission/launcher.sh >/tmp/fixedwing-mission/cronlog 2>&1
+@reboot sh /home/pi/fixedwing-mission/launch.sh >/tmp/fixedwing-mission/cronlog 2>&1
 ```
     
