@@ -8,7 +8,7 @@ from multiprocessing import Process
 
 import mission
 
-LOG_DIR = '/tmp/fixedwing-mission/'
+LOG_DIR = '/home/pi/tmp/fixedwing-mission/'
 LOG_FILE = f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}_mission.log'
 
 parser = argparse.ArgumentParser(description='commands')

@@ -1,0 +1,31 @@
+#! /bin/sh
+# /etc/init.d/fwd
+
+### BEGIN INIT INFO
+# Provides:          fwd
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: start a FWM from boot
+# Description:       FWM script which will start a program from boot and stop upon shut-down
+### END INIT INFO
+
+# Put any commands you always want to run here.
+
+case "$1" in
+	start)
+		echo "[$(date)]: Starting FWM" >> /home/pi/fixedwing-mission/log.txt
+		# run the program you want to start
+		/bin/bash /home/pi/fixedwing-mission/launch.sh >> /home/pi/fwlog.$(date +'%Y-%m-%d').txt 2>&1
+	;;
+	stop)
+		echo "[$(date)]: Stopping FWM" >> /home/pi/fixedwing-mission/log.txt
+		# end the program you want to stop
+		#killall launch.sh
+		;;
+	*)
+echo "Usage: /etc/init.d/fwd {start|stop}"
+exit 1
+;;
+esac
